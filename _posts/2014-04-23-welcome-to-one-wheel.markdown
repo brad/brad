@@ -35,9 +35,11 @@ First, you need to install and setup the OpenShift command line client. Red Hat 
 
 ### Quickstart
 Thankfully for me, the hardest part is already done. The folks at Red Hat must like Ghost because they have already created an [OpenShift Quickstart](https://github.com/openshift-quickstart/openshift-ghost-quickstart) for Ghost. It is just one of many [Quickstarts](https://github.com/openshift-quickstart) they have created for some other great open source projects, like Drupal, Plone, and Tomcat just to name a few. Now that you have `rhc` installed, drop into a command prompt and run the following:
-```
-rhc app create ghost nodejs-0.10 --scaling --env NODE_ENV=production --from-code https://github.com/openshift-quickstart/openshift-ghost-quickstart.git
-```
+
+{% highlight bash %}
+$ rhc app create ghost nodejs-0.10 --scaling --env NODE_ENV=production --from-code https://github.com/openshift-quickstart/openshift-ghost-quickstart.git
+{% endhighlight %}
+
 Replace `ghost` with the name of your application. Using the `--scaling` option allows you scale your app up to handle the load if needed. You cannot change this later so if you want your app to be scalable you need to use this option now.
 
 After creating the app with `rhc`, you should be able to see it at `https://<appname>-<domain>.rhcloud.com/`, replacing `<appname>` with your application's name and `<domain>` with your OpenShift domain name. Yep, it already works! Now to customize it.
@@ -53,7 +55,7 @@ After adding a DB cartridge you should have a list of configuration options to u
 ### config.js
 Open the `config.js` file in the root of the repository you cloned from OpenShift. This file contains all the configuration options for Ghost, but we are only concerned with the production configuration, so scroll down to the production section. If you are changing the database, replace the database section with something like the following.
 
-```
+{% highlight python %}
 database: {
     client: 'pg',
     connection: {
@@ -66,11 +68,13 @@ database: {
     },
     debug: false
 },
-```
+{% endhighlight %}
+
 Replace the values for `user`, `password` and `database` with your own information. If you didn't make note of it earlier, you can get it from the web console at this point. If you chose to use MySQL, you can use `process.env.OPENSHIFT_MYSQL_DB_HOST` for the host and `process.env.OPENSHIFT_MYSQL_DB_PORT` for the port.
 
 I also highly recommend setting up the mail settings now. Without proper mail settings, your ghost installation will not be able to send email. To use Gmail, replace the mail section with something like the following:
-```
+
+{% highlight python %}
 mail: {
     transport: 'SMTP',
     options: {
@@ -81,7 +85,8 @@ mail: {
         }
     }
 }
-```
+{% endhighlight %}
+
 You can also change the `url` value to whatever custom domain you may be using. If you do this you will also want to add your domain as an alias in the OpenShift web console.
 
 ### Sign in
