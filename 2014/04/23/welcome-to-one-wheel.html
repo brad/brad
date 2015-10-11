@@ -90,11 +90,11 @@ Jekyll. I’m keeping this page up however for historical purposes.</p>
 <p>First, you need to install and setup the OpenShift command line client. Red Hat has <a href="https://www.openshift.com/get-started#cli">decent instructions</a> for how to do it on multiple platforms so I won’t repeat that information here.</p>
 
 <h3 id="quickstart">Quickstart</h3>
-<p>Thankfully for me, the hardest part is already done. The folks at Red Hat must like Ghost because they have already created an <a href="https://github.com/openshift-quickstart/openshift-ghost-quickstart">OpenShift Quickstart</a> for Ghost. It is just one of many <a href="https://github.com/openshift-quickstart">Quickstarts</a> they have created for some other great open source projects, like Drupal, Plone, and Tomcat just to name a few. Now that you have <code>rhc</code> installed, drop into a command prompt and run the following:
-<code>
-rhc app create ghost nodejs-0.10 --scaling --env NODE_ENV=production --from-code https://github.com/openshift-quickstart/openshift-ghost-quickstart.git
-</code>
-Replace <code>ghost</code> with the name of your application. Using the <code>--scaling</code> option allows you scale your app up to handle the load if needed. You cannot change this later so if you want your app to be scalable you need to use this option now.</p>
+<p>Thankfully for me, the hardest part is already done. The folks at Red Hat must like Ghost because they have already created an <a href="https://github.com/openshift-quickstart/openshift-ghost-quickstart">OpenShift Quickstart</a> for Ghost. It is just one of many <a href="https://github.com/openshift-quickstart">Quickstarts</a> they have created for some other great open source projects, like Drupal, Plone, and Tomcat just to name a few. Now that you have <code>rhc</code> installed, drop into a command prompt and run the following:</p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>rhc app create ghost nodejs-0.10 --scaling --env <span class="nv">NODE_ENV</span><span class="o">=</span>production --from-code https://github.com/openshift-quickstart/openshift-ghost-quickstart.git</code></pre></div>
+
+<p>Replace <code>ghost</code> with the name of your application. Using the <code>--scaling</code> option allows you scale your app up to handle the load if needed. You cannot change this later so if you want your app to be scalable you need to use this option now.</p>
 
 <p>After creating the app with <code>rhc</code>, you should be able to see it at <code>https://&lt;appname&gt;-&lt;domain&gt;.rhcloud.com/</code>, replacing <code>&lt;appname&gt;</code> with your application’s name and <code>&lt;domain&gt;</code> with your OpenShift domain name. Yep, it already works! Now to customize it.</p>
 
@@ -109,36 +109,35 @@ Replace <code>ghost</code> with the name of your application. Using the <code>--
 <h3 id="configjs">config.js</h3>
 <p>Open the <code>config.js</code> file in the root of the repository you cloned from OpenShift. This file contains all the configuration options for Ghost, but we are only concerned with the production configuration, so scroll down to the production section. If you are changing the database, replace the database section with something like the following.</p>
 
-<p><code>
-database: {
-    client: 'pg',
-    connection: {
-        host     : process.env.OPENSHIFT_POSTGRESQL_DB_HOST,
-        port     : process.env.OPENSHIFT_POSTGRESQL_DB_PORT,
-        user     : 'user',
-        password : 'password',
-        database : 'database',
-        charset  : 'utf8'
-    },
-    debug: false
-},
-</code>
-Replace the values for <code>user</code>, <code>password</code> and <code>database</code> with your own information. If you didn’t make note of it earlier, you can get it from the web console at this point. If you chose to use MySQL, you can use <code>process.env.OPENSHIFT_MYSQL_DB_HOST</code> for the host and <code>process.env.OPENSHIFT_MYSQL_DB_PORT</code> for the port.</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">database</span><span class="p">:</span> <span class="p">{</span>
+    <span class="n">client</span><span class="p">:</span> <span class="s">&#39;pg&#39;</span><span class="p">,</span>
+    <span class="n">connection</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">host</span>     <span class="p">:</span> <span class="n">process</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">OPENSHIFT_POSTGRESQL_DB_HOST</span><span class="p">,</span>
+        <span class="n">port</span>     <span class="p">:</span> <span class="n">process</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">OPENSHIFT_POSTGRESQL_DB_PORT</span><span class="p">,</span>
+        <span class="n">user</span>     <span class="p">:</span> <span class="s">&#39;user&#39;</span><span class="p">,</span>
+        <span class="n">password</span> <span class="p">:</span> <span class="s">&#39;password&#39;</span><span class="p">,</span>
+        <span class="n">database</span> <span class="p">:</span> <span class="s">&#39;database&#39;</span><span class="p">,</span>
+        <span class="n">charset</span>  <span class="p">:</span> <span class="s">&#39;utf8&#39;</span>
+    <span class="p">},</span>
+    <span class="n">debug</span><span class="p">:</span> <span class="n">false</span>
+<span class="p">},</span></code></pre></div>
 
-<p>I also highly recommend setting up the mail settings now. Without proper mail settings, your ghost installation will not be able to send email. To use Gmail, replace the mail section with something like the following:
-<code>
-mail: {
-    transport: 'SMTP',
-    options: {
-        service: 'Gmail',
-        auth: {
-            user: 'gmailaddress',
-            pass: 'password'
-        }
-    }
-}
-</code>
-You can also change the <code>url</code> value to whatever custom domain you may be using. If you do this you will also want to add your domain as an alias in the OpenShift web console.</p>
+<p>Replace the values for <code>user</code>, <code>password</code> and <code>database</code> with your own information. If you didn’t make note of it earlier, you can get it from the web console at this point. If you chose to use MySQL, you can use <code>process.env.OPENSHIFT_MYSQL_DB_HOST</code> for the host and <code>process.env.OPENSHIFT_MYSQL_DB_PORT</code> for the port.</p>
+
+<p>I also highly recommend setting up the mail settings now. Without proper mail settings, your ghost installation will not be able to send email. To use Gmail, replace the mail section with something like the following:</p>
+
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">mail</span><span class="p">:</span> <span class="p">{</span>
+    <span class="n">transport</span><span class="p">:</span> <span class="s">&#39;SMTP&#39;</span><span class="p">,</span>
+    <span class="n">options</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">service</span><span class="p">:</span> <span class="s">&#39;Gmail&#39;</span><span class="p">,</span>
+        <span class="n">auth</span><span class="p">:</span> <span class="p">{</span>
+            <span class="n">user</span><span class="p">:</span> <span class="s">&#39;gmailaddress&#39;</span><span class="p">,</span>
+            <span class="k">pass</span><span class="p">:</span> <span class="s">&#39;password&#39;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<p>You can also change the <code>url</code> value to whatever custom domain you may be using. If you do this you will also want to add your domain as an alias in the OpenShift web console.</p>
 
 <h3 id="sign-in">Sign in</h3>
 <p>Now that we’re all set up, we can try signing in. Go to <code>https://&lt;appname&gt;-&lt;domain&gt;.rhcloud.com/ghost</code> and create a username/password. Uh oh, did you get a 503 error? Not to worry, this is a known error that is being worked on, but your user was created successfully. Just go back to <code>https://&lt;appname&gt;-&lt;domain&gt;.rhcloud.com/</code> to logon and test out your new Ghost system.</p>

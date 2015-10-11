@@ -6,9 +6,122 @@
 </description>
     <link>http://brad.github.io/</link>
     <atom:link href="http://brad.github.io/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sat, 10 Oct 2015 22:41:17 -0700</pubDate>
-    <lastBuildDate>Sat, 10 Oct 2015 22:41:17 -0700</lastBuildDate>
+    <pubDate>Sun, 11 Oct 2015 11:29:44 -0700</pubDate>
+    <lastBuildDate>Sun, 11 Oct 2015 11:29:44 -0700</lastBuildDate>
     <generator>Jekyll v2.5.3</generator>
+    
+      <item>
+        <title>How to write unit tests for Inkscape plugins</title>
+        <description>&lt;p&gt;When I first put together my &lt;a href=&quot;https://github.com/brad/Inkscape-OpenSCAD-DXF-Export&quot;&gt;Inkscape OpenSCAD DXF export plugin&lt;/a&gt;, I never
+considered writing unit tests for it, assuming it would be impracticle.
+Years later, I revisited the possibility and found it to be not only practicle,
+but absolutely necessary. A bug was reported against the plugin that only
+manifested in a recently released version of Inkscape which introduced a
+backward incompatibility.&lt;/p&gt;
+
+&lt;p&gt;Now, I didn’t want to go about manually testing different types of SVG elements
+on both current versions of Inkscape, so I set about investigating what it would
+take to write unit tests.&lt;/p&gt;
+
+&lt;h2 id=&quot;triggering-the-export&quot;&gt;Triggering the export&lt;/h2&gt;
+
+&lt;p&gt;Through manually toying in the Python shell, I found that I could trigger the
+plugin export by instantiating the plugins effect class and calling the
+&lt;code&gt;affect&lt;/code&gt; method with an array containing the path to an SVG file as an argument.
+My plugin stores the results in a member variable, so I could compare that
+against known good output. Something like this:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;openscad_dxf&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;OpenSCADDXFEffect&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;effect&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;OpenSCADDXFEffect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;effect&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;affect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;tests/files/circle.svg&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;with&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;open&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;tests/files/circle.dxf&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;r&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dxf_file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;assertEqual&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;effect&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dxf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dxf_file&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;read&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rstrip&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;testing-multiple-inkscape-versions&quot;&gt;Testing multiple Inkscape versions&lt;/h2&gt;
+
+&lt;p&gt;Testing multiple inkscape versions locally is a bit of a pain because I
+couldn’t find a way to have them both installed at once. Here’s where
+&lt;a href=&quot;https://travis-ci.org/&quot;&gt;Travis&lt;/a&gt; came in handy. If you aren’t familiar with the
+Travis service, I highly recommend checking it out. With Travis I was able to
+specify a test matrix of multiple Python versions and multiple Inkscape versions
+and the service now runs my unit tests with all combinations of the specified
+Python and Inkscape versions. Here’s the configuration I started with:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span class=&quot;l-Scalar-Plain&quot;&gt;language&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;python&lt;/span&gt;
+&lt;span class=&quot;l-Scalar-Plain&quot;&gt;python&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;pypy&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;2.7&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# Test both current major versions of Inkscape&lt;/span&gt;
+&lt;span class=&quot;l-Scalar-Plain&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;INKSCAPE_VERSION=&amp;quot;0.48.3.1-1ubuntu1.1&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;INKSCAPE_VERSION=&amp;quot;0.91.0+37~ubuntu12.04.1&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# command to install dependencies&lt;/span&gt;
+&lt;span class=&quot;l-Scalar-Plain&quot;&gt;install&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;sudo add-apt-repository -y ppa:inkscape.dev/stable&lt;/span&gt;
+  &lt;span class=&quot;p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;sudo apt-get update -qq&lt;/span&gt;
+  &lt;span class=&quot;p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;sudo apt-get install -qq &amp;quot;inkscape=$INKSCAPE_VERSION&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;pip install -r test-requirements.txt&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# command to run tests&lt;/span&gt;
+&lt;span class=&quot;l-Scalar-Plain&quot;&gt;script&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;nosetests --with-coverage --cover-branches&lt;/span&gt;
+&lt;span class=&quot;l-Scalar-Plain&quot;&gt;after_success&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l-Scalar-Plain&quot;&gt;coveralls&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Allow me to break down the important pieces here. First, we specify the Python
+versions to test against. We only list &lt;code&gt;pypy&lt;/code&gt;, and &lt;code&gt;2.7&lt;/code&gt; here because there is
+still some Inkscape plugin code (that my plugin depends on) that doesn’t work
+with Python versions greater than 3.&lt;/p&gt;
+
+&lt;p&gt;In the &lt;code&gt;env&lt;/code&gt; section we specify the Inkscape versions to test against. The long
+version strings used here are the versions of the packages in the
+&lt;a href=&quot;https://launchpad.net/~inkscape.dev/+archive/ubuntu/stable&quot;&gt;Inkscape.dev Ubuntu PPA&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;In the &lt;code&gt;install&lt;/code&gt; section, we add the PPA, install the package, and &lt;code&gt;pip install&lt;/code&gt;
+any other Python testing packages required.&lt;/p&gt;
+
+&lt;p&gt;Finally, in the &lt;code&gt;script&lt;/code&gt; section we run the tests. I like to run my tests with
+coverage, so I can run &lt;code&gt;coveralls&lt;/code&gt; after the tests to get a nice looking code
+coverage report
+&lt;a href=&quot;https://coveralls.io/github/brad/Inkscape-OpenSCAD-DXF-Export&quot;&gt;on the web&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;With this configuration in place in my repository, all I had to do was enable
+the repository on &lt;a href=&quot;https://travis-ci.org&quot;&gt;travis-ci.org&lt;/a&gt; and push to GitHub to
+let Travis do it’s work.&lt;/p&gt;
+
+&lt;h2 id=&quot;running-inkscape-headless&quot;&gt;Running Inkscape headless&lt;/h2&gt;
+
+&lt;p&gt;In my case, I wasn’t quite finished yet. For reasons I won’t go into here, my
+plugin needs to spawn a full GUI instance of Inkscape to work. When running the
+tests locally, this is a non-issue. I just watch the windows pop in and out of
+existence as the tests run. However, a Travis test server is a headless
+environment which means it has no peripherals attached to it, including a
+display. When I tried to run the tests using the configuration above, they
+failed when trying to spawn Inkscape.&lt;/p&gt;
+
+&lt;p&gt;Fortunately, there is a simple way to get GUI processes to work in headless
+environments. There is a handy service called
+&lt;a href=&quot;https://en.wikipedia.org/wiki/Xvfb&quot;&gt;xvfb&lt;/a&gt; (X virtual framebuffer) which creates
+a virtual display on which to show any GUI processes. We can start the service
+on a Travis server with just a few extra lines of configuration:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span class=&quot;c1&quot;&gt;# Start xvfb so we can run Inkscape headless&lt;/span&gt;
+&lt;span class=&quot;l-Scalar-Plain&quot;&gt;before_install&lt;/span&gt;&lt;span class=&quot;p-Indicator&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;export&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;DISPLAY=:99.0&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;sh&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;-e&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;/etc/init.d/xvfb&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;start&amp;quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;With this configuration in place, all I have to do is push my changes and Travis
+automatically verifies that the expected dxf files get produced in both current
+Inkscape versions with the new code.&lt;/p&gt;
+
+&lt;p&gt;I hope this walkthrough of my experiences helps you to write unit tests for your
+own Inkscape plugin. Please feel free to &lt;a href=&quot;https://github.com/brad/Inkscape-OpenSCAD-DXF-Export&quot;&gt;browse the code&lt;/a&gt; to see how I fleshed
+out the tests from here.&lt;/p&gt;
+</description>
+        <pubDate>Sun, 11 Oct 2015 11:12:03 -0700</pubDate>
+        <link>http://brad.github.io/2015/10/11/inkscape-plugin-unit-testing.html</link>
+        <guid isPermaLink="true">http://brad.github.io/2015/10/11/inkscape-plugin-unit-testing.html</guid>
+        
+        
+      </item>
     
       <item>
         <title>Welcome to One Wheel</title>
@@ -40,11 +153,11 @@ Jekyll. I’m keeping this page up however for historical purposes.&lt;/p&gt;
 &lt;p&gt;First, you need to install and setup the OpenShift command line client. Red Hat has &lt;a href=&quot;https://www.openshift.com/get-started#cli&quot;&gt;decent instructions&lt;/a&gt; for how to do it on multiple platforms so I won’t repeat that information here.&lt;/p&gt;
 
 &lt;h3 id=&quot;quickstart&quot;&gt;Quickstart&lt;/h3&gt;
-&lt;p&gt;Thankfully for me, the hardest part is already done. The folks at Red Hat must like Ghost because they have already created an &lt;a href=&quot;https://github.com/openshift-quickstart/openshift-ghost-quickstart&quot;&gt;OpenShift Quickstart&lt;/a&gt; for Ghost. It is just one of many &lt;a href=&quot;https://github.com/openshift-quickstart&quot;&gt;Quickstarts&lt;/a&gt; they have created for some other great open source projects, like Drupal, Plone, and Tomcat just to name a few. Now that you have &lt;code&gt;rhc&lt;/code&gt; installed, drop into a command prompt and run the following:
-&lt;code&gt;
-rhc app create ghost nodejs-0.10 --scaling --env NODE_ENV=production --from-code https://github.com/openshift-quickstart/openshift-ghost-quickstart.git
-&lt;/code&gt;
-Replace &lt;code&gt;ghost&lt;/code&gt; with the name of your application. Using the &lt;code&gt;--scaling&lt;/code&gt; option allows you scale your app up to handle the load if needed. You cannot change this later so if you want your app to be scalable you need to use this option now.&lt;/p&gt;
+&lt;p&gt;Thankfully for me, the hardest part is already done. The folks at Red Hat must like Ghost because they have already created an &lt;a href=&quot;https://github.com/openshift-quickstart/openshift-ghost-quickstart&quot;&gt;OpenShift Quickstart&lt;/a&gt; for Ghost. It is just one of many &lt;a href=&quot;https://github.com/openshift-quickstart&quot;&gt;Quickstarts&lt;/a&gt; they have created for some other great open source projects, like Drupal, Plone, and Tomcat just to name a few. Now that you have &lt;code&gt;rhc&lt;/code&gt; installed, drop into a command prompt and run the following:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;rhc app create ghost nodejs-0.10 --scaling --env &lt;span class=&quot;nv&quot;&gt;NODE_ENV&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;production --from-code https://github.com/openshift-quickstart/openshift-ghost-quickstart.git&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Replace &lt;code&gt;ghost&lt;/code&gt; with the name of your application. Using the &lt;code&gt;--scaling&lt;/code&gt; option allows you scale your app up to handle the load if needed. You cannot change this later so if you want your app to be scalable you need to use this option now.&lt;/p&gt;
 
 &lt;p&gt;After creating the app with &lt;code&gt;rhc&lt;/code&gt;, you should be able to see it at &lt;code&gt;https://&amp;lt;appname&amp;gt;-&amp;lt;domain&amp;gt;.rhcloud.com/&lt;/code&gt;, replacing &lt;code&gt;&amp;lt;appname&amp;gt;&lt;/code&gt; with your application’s name and &lt;code&gt;&amp;lt;domain&amp;gt;&lt;/code&gt; with your OpenShift domain name. Yep, it already works! Now to customize it.&lt;/p&gt;
 
@@ -59,36 +172,35 @@ Replace &lt;code&gt;ghost&lt;/code&gt; with the name of your application. Using 
 &lt;h3 id=&quot;configjs&quot;&gt;config.js&lt;/h3&gt;
 &lt;p&gt;Open the &lt;code&gt;config.js&lt;/code&gt; file in the root of the repository you cloned from OpenShift. This file contains all the configuration options for Ghost, but we are only concerned with the production configuration, so scroll down to the production section. If you are changing the database, replace the database section with something like the following.&lt;/p&gt;
 
-&lt;p&gt;&lt;code&gt;
-database: {
-    client: 'pg',
-    connection: {
-        host     : process.env.OPENSHIFT_POSTGRESQL_DB_HOST,
-        port     : process.env.OPENSHIFT_POSTGRESQL_DB_PORT,
-        user     : 'user',
-        password : 'password',
-        database : 'database',
-        charset  : 'utf8'
-    },
-    debug: false
-},
-&lt;/code&gt;
-Replace the values for &lt;code&gt;user&lt;/code&gt;, &lt;code&gt;password&lt;/code&gt; and &lt;code&gt;database&lt;/code&gt; with your own information. If you didn’t make note of it earlier, you can get it from the web console at this point. If you chose to use MySQL, you can use &lt;code&gt;process.env.OPENSHIFT_MYSQL_DB_HOST&lt;/code&gt; for the host and &lt;code&gt;process.env.OPENSHIFT_MYSQL_DB_PORT&lt;/code&gt; for the port.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;n&quot;&gt;database&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;client&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;pg&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;connection&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;host&lt;/span&gt;     &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;process&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;OPENSHIFT_POSTGRESQL_DB_HOST&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;port&lt;/span&gt;     &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;process&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;OPENSHIFT_POSTGRESQL_DB_PORT&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;     &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;user&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;password&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;password&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;database&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;database&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;charset&lt;/span&gt;  &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;utf8&amp;#39;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;debug&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;false&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;p&gt;I also highly recommend setting up the mail settings now. Without proper mail settings, your ghost installation will not be able to send email. To use Gmail, replace the mail section with something like the following:
-&lt;code&gt;
-mail: {
-    transport: 'SMTP',
-    options: {
-        service: 'Gmail',
-        auth: {
-            user: 'gmailaddress',
-            pass: 'password'
-        }
-    }
-}
-&lt;/code&gt;
-You can also change the &lt;code&gt;url&lt;/code&gt; value to whatever custom domain you may be using. If you do this you will also want to add your domain as an alias in the OpenShift web console.&lt;/p&gt;
+&lt;p&gt;Replace the values for &lt;code&gt;user&lt;/code&gt;, &lt;code&gt;password&lt;/code&gt; and &lt;code&gt;database&lt;/code&gt; with your own information. If you didn’t make note of it earlier, you can get it from the web console at this point. If you chose to use MySQL, you can use &lt;code&gt;process.env.OPENSHIFT_MYSQL_DB_HOST&lt;/code&gt; for the host and &lt;code&gt;process.env.OPENSHIFT_MYSQL_DB_PORT&lt;/code&gt; for the port.&lt;/p&gt;
+
+&lt;p&gt;I also highly recommend setting up the mail settings now. Without proper mail settings, your ghost installation will not be able to send email. To use Gmail, replace the mail section with something like the following:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;n&quot;&gt;mail&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;transport&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;SMTP&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;options&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;service&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;Gmail&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;auth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;gmailaddress&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;pass&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;password&amp;#39;&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;You can also change the &lt;code&gt;url&lt;/code&gt; value to whatever custom domain you may be using. If you do this you will also want to add your domain as an alias in the OpenShift web console.&lt;/p&gt;
 
 &lt;h3 id=&quot;sign-in&quot;&gt;Sign in&lt;/h3&gt;
 &lt;p&gt;Now that we’re all set up, we can try signing in. Go to &lt;code&gt;https://&amp;lt;appname&amp;gt;-&amp;lt;domain&amp;gt;.rhcloud.com/ghost&lt;/code&gt; and create a username/password. Uh oh, did you get a 503 error? Not to worry, this is a known error that is being worked on, but your user was created successfully. Just go back to &lt;code&gt;https://&amp;lt;appname&amp;gt;-&amp;lt;domain&amp;gt;.rhcloud.com/&lt;/code&gt; to logon and test out your new Ghost system.&lt;/p&gt;
