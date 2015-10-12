@@ -5,8 +5,8 @@ date: 2015-10-11T11:12:03-07:00
 ---
 
 When I first put together my [Inkscape OpenSCAD DXF export plugin](https://github.com/brad/Inkscape-OpenSCAD-DXF-Export), I never
-considered writing unit tests for it, assuming it would be impracticle.
-Years later, I revisited the possibility and found it to be not only practicle,
+considered writing unit tests for it, assuming it would be impractical.
+Years later, I revisited the possibility and found it to be not only practical,
 but absolutely necessary. A bug was reported against the plugin that only
 manifested in a recently released version of Inkscape which introduced a
 backward incompatibility.
