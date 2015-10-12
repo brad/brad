@@ -2,7 +2,7 @@
 title: Brad Pitcher
 email: bradpitcher@gmail.com
 description: > # this means to ignore newlines until "baseurl:"
-  Passion for creating things and learning are what drives me in life.
+  Passion for creating things and learning are what drive me in life.
 baseurl: "" # the subpath of your site, e.g. /blog/
 url: "http://brad.github.io" # the base hostname & protocol for your site
 twitter_username: bradpitcher
