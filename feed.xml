@@ -2,19 +2,19 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Brad Pitcher</title>
-    <description>Passion for creating things and learning are what drives me in life.
+    <description>Passion for creating things and learning are what drive me in life.
 </description>
     <link>http://brad.github.io/</link>
     <atom:link href="http://brad.github.io/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sun, 11 Oct 2015 11:29:44 -0700</pubDate>
-    <lastBuildDate>Sun, 11 Oct 2015 11:29:44 -0700</lastBuildDate>
+    <pubDate>Sun, 11 Oct 2015 20:20:57 -0700</pubDate>
+    <lastBuildDate>Sun, 11 Oct 2015 20:20:57 -0700</lastBuildDate>
     <generator>Jekyll v2.5.3</generator>
     
       <item>
         <title>How to write unit tests for Inkscape plugins</title>
         <description>&lt;p&gt;When I first put together my &lt;a href=&quot;https://github.com/brad/Inkscape-OpenSCAD-DXF-Export&quot;&gt;Inkscape OpenSCAD DXF export plugin&lt;/a&gt;, I never
-considered writing unit tests for it, assuming it would be impracticle.
-Years later, I revisited the possibility and found it to be not only practicle,
+considered writing unit tests for it, assuming it would be impractical.
+Years later, I revisited the possibility and found it to be not only practical,
 but absolutely necessary. A bug was reported against the plugin that only
 manifested in a recently released version of Inkscape which introduced a
 backward incompatibility.&lt;/p&gt;
