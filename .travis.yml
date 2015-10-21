@@ -6,7 +6,8 @@ addons:
     packages:
     - texlive-full
     - inkscape
-sudo: false
+sudo: required
+dist: trusty
 before_install:
   - openssl aes-256-cbc -K $encrypted_998bb8df25c8_key -iv $encrypted_998bb8df25c8_iv
     -in id_rsa.enc -out ~/.ssh/id_rsa -d
