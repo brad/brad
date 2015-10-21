@@ -17,4 +17,5 @@ before_script:
   - (cd assets/resume && pdflatex -shell-escape bradpitcher_resume.tex)
   - (cd assets/resume && pdflatex -shell-escape bradpitcher_resume.tex)
 script:
+  - jekyll build
   - octopress deploy
