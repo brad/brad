@@ -1,0 +1,542 @@
+% Generated with:
+% pdflatex -shell-escape bradpitcher_resume.tex
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%% Simple LaTeX CV Template %%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% NOTE: If you find that it says                                     %%
+%%                                                                    %%
+%%                           1 of ??                                  %%
+%%                                                                    %%
+%% at the bottom of your first page, this means that the AUX file     %%
+%% was not available when you ran LaTeX on this source. Simply RERUN  %%
+%% LaTeX to get the ``??'' replaced with the number of the last page  %%
+%% of the document. The AUX file will be generated on the first run   %%
+%% of LaTeX and used on the second run to fill in all of the          %%
+%% references.                                                        %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% Document Setup %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Don't like 10pt? Try 11pt or 12pt
+\documentclass[11pt]{article}
+
+% This is a helpful package that puts math inside length specifications
+\usepackage{calc}
+\usepackage{svg}
+
+% Simpler bibsection for CV sections
+% (thanks to natbib for inspiration)
+\makeatletter
+\newlength{\bibhang}
+\setlength{\bibhang}{1em}
+\newlength{\bibsep}
+ {\@listi \global\bibsep\itemsep \global\advance\bibsep by\parsep}
+\newenvironment{bibsection}
+    {\minipage[t]{\linewidth}\list{}{%
+        \setlength{\leftmargin}{\bibhang}%
+        \setlength{\itemindent}{-\leftmargin}%
+        \setlength{\itemsep}{\bibsep}%
+        \setlength{\parsep}{\z@}%
+        }}
+    {\endlist\endminipage}
+\makeatother
+
+% Layout: Puts the section titles on left side of page
+\reversemarginpar
+
+%
+%         PAPER SIZE, PAGE NUMBER, AND DOCUMENT LAYOUT NOTES:
+%
+% The next \usepackage line changes the layout for CV style section
+% headings as marginal notes. It also sets up the paper size as either
+% letter or A4. By default, letter was used. If A4 paper is desired,
+% comment out the letterpaper lines and uncomment the a4paper lines.
+%
+% As you can see, the margin widths and section title widths can be
+% easily adjusted.
+%
+% ALSO: Notice that the includefoot option can be commented OUT in order
+% to put the PAGE NUMBER *IN* the bottom margin. This will make the
+% effective text area larger.
+%
+% IF YOU WISH TO REMOVE THE ``of LASTPAGE'' next to each page number,
+% see the note about the +LP and -LP lines below. Comment out the +LP
+% and uncomment the -LP.
+%
+% IF YOU WISH TO REMOVE PAGE NUMBERS, be sure that the includefoot line
+% is uncommented and ALSO uncomment the \pagestyle{empty} a few lines
+% below.
+%
+
+%% Use these lines for letter-sized paper
+\usepackage[paper=letterpaper,
+            %includefoot, % Uncomment to put page number above margin
+            marginparwidth=1.2in,     % Length of section titles
+            marginparsep=.05in,       % Space between titles and text
+            margin=1in,               % 1 inch margins
+            includemp]{geometry}
+
+%% Use these lines for A4-sized paper
+%\usepackage[paper=a4paper,
+%            %includefoot, % Uncomment to put page number above margin
+%            marginparwidth=30.5mm,    % Length of section titles
+%            marginparsep=1.5mm,       % Space between titles and text
+%            margin=25mm,              % 25mm margins
+%            includemp]{geometry}
+
+%% More layout: Get rid of indenting throughout entire document
+\setlength{\parindent}{0in}
+
+%% This gives us fun enumeration environments. compactitem will be nice.
+\usepackage{paralist}
+
+\usepackage{graphicx}
+
+%% Reference the last page in the page number
+%
+% NOTE: comment the +LP line and uncomment the -LP line to have page
+%       numbers without the ``of ##'' last page reference)
+%
+% NOTE: uncomment the \pagestyle{empty} line to get rid of all page
+%       numbers (make sure includefoot is commented out above)
+%
+\usepackage{fancyhdr,lastpage}
+\pagestyle{fancy}
+%\pagestyle{empty}      % Uncomment this to get rid of page numbers
+\fancyhf{}\renewcommand{\headrulewidth}{0pt}
+\fancyfootoffset{\marginparsep+\marginparwidth}
+\newlength{\footpageshift}
+\setlength{\footpageshift}
+          {0.5\textwidth+0.5\marginparsep+0.5\marginparwidth-2in}
+\lfoot{\hspace{\footpageshift}%
+       \parbox{4in}{\, \hfill %
+                    \arabic{page} of \protect\pageref*{LastPage} % +LP
+%                    \arabic{page}                               % -LP
+                    \hfill \,}}
+
+% Finally, give us PDF bookmarks
+\usepackage{color,hyperref}
+\definecolor{darkblue}{rgb}{0.0,0.0,0.3}
+\hypersetup{colorlinks,breaklinks,
+            linkcolor=darkblue,urlcolor=darkblue,
+            anchorcolor=darkblue,citecolor=darkblue}
+
+%%%%%%%%%%%%%%%%%%%%%%%% End Document Setup %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%% Helper Commands %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% The title (name) with a horizontal rule under it
+%
+% Usage: \makeheading{name}
+%
+% Place at top of document. It should be the first thing.
+\newcommand{\makeheading}[2][]%
+        {\hspace*{-\marginparsep minus \marginparwidth}%
+         \begin{minipage}[t]{\textwidth+\marginparwidth+\marginparsep}%
+             {\large \bfseries #2 \hfill #1}\\[-0.15\baselineskip]%
+                 \rule{\columnwidth}{1pt}%
+         \end{minipage}}
+
+% The section headings
+%
+% Usage: \section{section name}
+%
+% Follow this section IMMEDIATELY with the first line of the section
+% text. Do not put whitespace in between. That is, do this:
+%
+%       \section{My Information}
+%       Here is my information.
+%
+% and NOT this:
+%
+%       \section{My Information}
+%
+%       Here is my information.
+%
+% Otherwise the top of the section header will not line up with the top
+% of the section. Of course, using a single comment character (%) on
+% empty lines allows for the function of the first example with the
+% readability of the second example.
+\renewcommand{\section}[2]%
+        {\pagebreak[2]\vspace{1.3\baselineskip}%
+         \phantomsection\addcontentsline{toc}{section}{#1}%
+         \hspace{0in}%
+         \marginpar{
+         \raggedright \scshape #1}#2}
+
+% An itemize-style list with lots of space between items
+\newenvironment{outerlist}[1][\enskip\textbullet]%
+        {\begin{itemize}[#1]}{\end{itemize}%
+         \vspace{-.6\baselineskip}}
+
+% An environment IDENTICAL to outerlist that has better pre-list spacing
+% when used as the first thing in a \section
+\newenvironment{lonelist}[1][\enskip\textbullet]%
+        {\vspace{-\baselineskip}\begin{list}{#1}{%
+        \setlength{\partopsep}{0pt}%
+        \setlength{\topsep}{0pt}}}
+        {\end{list}\vspace{-.6\baselineskip}}
+
+% An itemize-style list with little space between items
+\newenvironment{innerlist}[1][\enskip\textbullet]%
+        {\begin{compactitem}[#1]}{\end{compactitem}}
+
+% To add some paragraph space between lines.
+% This also tells LaTeX to preferably break a page on one of these gaps
+% if there is a needed pagebreak nearby.
+\newcommand{\blankline}{\quad\pagebreak[2]}
+
+%
+
+%%%%%%%%%%%%%%%%%%%%%%%% End Helper Commands %%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%% Begin CV Document %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\makeheading[
+  \href{mailto:bradpitcher@gmail.com}{\includesvg[height=16px]{email}}~
+  \href{https://github.com/brad}{\includesvg[height=16px]{github}}~
+  \href{https://twitter.com/bradpitcher}{\includesvg[height=16px]{twitter}}~
+  \href{https://www.linkedin.com/in/bradpitcher}{\includesvg[height=16px]{linkedin}}
+]{\href{https://brad.github.io}{Brad K.~Pitcher}}
+
+\section{Objective}
+%
+To improve quality of life with software engineering.
+
+\section{Technical Skills}
+%
+\textbf{Favorite Languages}: Python (2.6-2.7, 3.2-3.5, and PyPy), JavaScript
+        (especially \href{https://github.com/lukehoban/es6features}{ES6}),
+        Bash shell scripting, Java, HTML5, CSS3, \LaTeX{}, PHP, SQL, Ruby,
+        C/C$+$$+$/C\#
+
+\blankline
+
+\textbf{Favorite Software}:
+        \href{https://www.kernel.org/}{Linux} (\href{https://www.archlinux.org/}{Arch Linux},
+        \href{http://www.ubuntu.com/}{Ubuntu}),
+        \href{https://www.gnome.org/}{GNOME},
+        \href{https://www.djangoproject.com/}{Django (1.4-1.9)},
+        \href{https://pip.pypa.io/en/stable/}{pip},
+        \href{http://www.ansible.com/}{Ansible},
+        \href{https://www.vagrantup.com/}{Vagrant},
+        \href{https://www.docker.com/}{Docker},
+        \href{https://www.virtualbox.org/}{VirtualBox},
+        \href{https://jekyllrb.com/}{Jekyll},
+        \href{http://octopress.org/}{Octopress},
+        \href{https://virtualenv.pypa.io/en/latest/}{virtualenv},
+        \href{https://tox.readthedocs.org/en/latest/}{tox},
+        \href{https://coverage.readthedocs.org/en/latest/}{coverage},
+        \href{http://pypy.org/}{PyPy},
+        \href{https://jquery.com/}{jQuery},
+        \href{https://www.gnu.org/software/make/}{GNU make},
+        VCS (\href{https://git-scm.com/}{Git},
+        \href{https://mercurial-scm.org/}{Mercurial}),
+        \href{https://git-cola.github.io/}{git-cola},
+        \href{http://phonegap.com/}{PhoneGap (Android, iOS)},
+        \href{https://jenkins-ci.org/}{Jenkins},
+        \href{https://httpd.apache.org/}{Apache},
+        \href{http://www.postgresql.org/}{PostgreSQL},
+        \href{https://www.mysql.com/}{MySQL},
+        \href{https://mariadb.org/}{MariaDB},
+        \href{https://nodejs.org/}{node.js},
+        \href{https://facebook.github.io/react/}{React}\nolinebreak,
+        \href{https://facebook.github.io/react-native/}{React Native},
+        \href{http://phantomjs.org/}{PhantomJS},
+        \href{https://mochajs.org/}{Mocha},
+        \href{http://getbootstrap.com/}{Bootstrap},
+        \href{http://backbonejs.org/}{Backbone.js},
+        \href{http://underscorejs.org/}{Underscore.js},
+        \href{http://coffeescript.org/}{CoffeeScript},
+        \href{http://lesscss.org/}{\{less\}},
+        \href{https://www.meteor.com/}{Meteor},
+        \href{https://atom.io/}{Atom},
+        \href{http://www.vim.org/}{Vim},
+        \href{http://www.gimp.org/}{Gimp},
+        \href{https://www.inkscape.org/en/}{Inkscape},
+        \href{http://www.openscad.org/}{OpenSCAD},
+        \href{http://www.pronterface.com/}{Printrun},
+        \href{https://www.blender.org/}{Blender},
+        \href{http://pencil.evolus.vn/}{Pencil},
+        \href{https://github.com/raelgc/scudcloud}{ScudCloud},
+        \href{https://encryptr.org/}{Encryptr},
+        and many \href{https://gnu.org/}{GNU} and
+        \href{http://www.unix.org/}{UNIX} tools
+
+\blankline
+
+\textbf{Favorite Services}:
+        \href{https://github.com}{GitHub},
+        \href{https://bitbucket.org/}{Bitbucket},
+        \href{https://pypi.python.org/pypi}{PyPI},
+        \href{https://galaxy.ansible.com/}{Ansible Galaxy},
+        \href{https://readthedocs.org/}{Read the Docs},
+        \href{https://travis-ci.org/}{Travis CI},
+        \href{https://circleci.com/}{CircleCI},
+        \href{https://www.versioneye.com/}{VersionEye},
+        \href{https://requires.io/}{Requires.io},
+        \href{https://coveralls.io/}{Coveralls},
+        \href{https://heroku.com}{Heroku},
+        \href{http://aws.amazon.com/}{Amazon Web Services (S3, EC2)},
+        \href{http://stackexchange.com/}{Stack Exchange},
+        \href{https://build.phonegap.com/}{PhoneGap Build},
+        \href{https://rnplay.org/}{React Native Playground},
+        \href{https://www.dropbox.com/}{Dropbox},
+        \href{https://drive.google.com/}{Google Drive},
+        \href{https://hangouts.google.com/}{Google Hangouts},
+        \href{http://mailchimp.com/}{Mailchimp},
+        \href{http://www.fitbit.com}{Fitbit},
+        \href{http://coursera.org/}{Coursera},
+        \href{http://www.thingiverse.com}{Thingiverse}
+
+\section{Professional Experience}
+%
+
+\href{http://www.orcasinc.com/}{\textbf{ORCAS}},
+Eugene, Oregon USA
+\begin{outerlist}
+
+    \item[] \textit{Senior Software Engineer}%
+            \hfill \textbf{June 2012 to present}
+    \begin{innerlist}
+         \item Build web application backends using the Django framework
+         \item Make design modifications to improve existing applications
+         \item Manage server infrastructure
+         \item Provide expertise for research grants
+         \item Build supplemental mobile apps for Android and iOS
+         \item Develop according to Agile methodologies
+    \end{innerlist}
+\end{outerlist}
+
+\blankline
+
+\href{http://www.freedomvoice.com/}{\textbf{Freedom Voice}},
+Encinitas, California USA
+\begin{outerlist}
+
+    \item[] \textit{Front-End Web Developer}%
+            \hfill \textbf{June 2010 to May 2012}
+    \begin{innerlist}
+         \item Help with technology decisions
+         \item Build websites using the Kohana framework given Photoshop files
+         \item Work with designers to resolve unforeseen user interface issues
+    \end{innerlist}
+\end{outerlist}
+
+\blankline
+
+\textbf{Independent Software Contractor},
+Eugene, Oregon USA
+\begin{outerlist}
+
+    \item[] \textit{Software Engineer}%
+            \hfill \textbf{January 2009 to June 2010}
+    \begin{innerlist}
+        \item Manage client relationships
+        \item Communicate with the client to develop requirements and deliverables
+        \item Implement all aspects of the project
+    \end{innerlist}
+
+    %\item[] \href{http://www.moonrootsoaps.com/}{\textit{Moon Root}}%
+    %        \hfill \textbf{April 2009 to August 2009}
+    %\begin{innerlist}
+    %    \item Used CakePHP to build product models, allowing easy content updates
+    %    \item Responsible for everything except high-level design and product images
+    %    \item Integrated PayPal buttons
+    %    \item Website maintenance
+    %\end{innerlist}
+\end{outerlist}
+
+\blankline
+
+\href{http://www.orcasinc.com/}{\textbf{Oregon Center for Applied Science (ORCAS)}},
+Eugene, Oregon USA
+\begin{outerlist}
+
+    \item[] \textit{Software Engineer}%
+            \hfill \textbf{Fall 2006 to Spring 2008}
+    \begin{innerlist}
+         \item Build websites using the Django framework given CSS and high-level design
+         \item Increase website interactivity using AJAX
+         \item Design and implement software installation CD
+         \item Work together with Research Assistants on site designs
+         \item Enhance CSS and design as required
+    \end{innerlist}
+\end{outerlist}
+
+\blankline
+
+\href{http://www.imetrikus.com/}{\textbf{iMetrikus, Inc.}},
+Carlsbad, California USA
+\begin{outerlist}
+
+    \item[] \textit{Software/QA Engineer}%
+            \hfill \textbf{Summer 2004 to Fall 2006}
+    \begin{innerlist}
+		\item Implement new features as specified in Engineering Change Orders/Requests
+		%\item Fix bugs
+		\item Create and maintain reports using SQL Server Reporting Services
+		%\item Write FRDs based on Marketing Requirement Documents (MRD)
+		\item Help with Software Configuration Management (SCM)
+		\item Run deployments and troubleshooted problems on many systems from demo systems to production servers
+		%\item Traveled to Finland to collaborate with external development team
+		\item Write and execute test plans based on Functional Requirements Documents (FRD)
+		\item Write test reports based on test execution results
+    \end{innerlist}
+
+\end{outerlist}
+
+\blankline
+
+\href{http://www.utah.edu/}{\textbf{University of Utah}},
+Salt Lake City, Utah USA
+\begin{outerlist}
+
+\item[] \textit{Software Developer}%
+        \hfill \textbf{Fall 2003 to Spring 2004}
+    \begin{innerlist}
+		     \item Responsible for the collaborative/education component of \href{http://therate.hec.utah.edu/}{Computational Science and Engineering Online (CSEO)}, an innovative online grid-enabled cyberinfrastructure for research, collaboration, and education in Computational Science and Engineering
+		     \item Integrate collaborative tools such as chat, whiteboard, audio/video conferencing, and desktop sharing into the CSEO mainframe
+		     \item Continued development and bug fixes to the collaborative tools
+		     \item Participate in demo for potential investors
+    \end{innerlist}
+
+\end{outerlist}
+
+\section{Academic Experience}
+\href{http://www.uoregon.edu}{\textbf{University of Oregon}},
+Eugene, Oregon USA
+\begin{outerlist}
+
+\item[] \textit{Graduate Student}%
+    \hfill \textbf{Fall 2006 to Spring 2009}
+    \begin{innerlist}
+
+        \item Member of the \href{http://aimlab.cs.uoregon.edu}{Advanced Integration and Mining (AIM) Laboratory}
+        \begin{innerlist}
+            \item Summer~2008 to Fall~2009
+            \item Research ways to benchmark heterogeneous data mining
+            \item Extend lab software to generate heterogeneous data with a predefined gold standard
+        \end{innerlist}~
+
+        \item Grader for CIT~383: Enterprise Networking
+        \begin{innerlist}
+            \item Spring~2009
+        \end{innerlist}~
+
+        \item Grader for CIS~170: Science of Computing
+        \begin{innerlist}
+            \item Winter~2008 and Winter~2009
+        \end{innerlist}~
+
+        \item Graduate Teaching Fellow (GTF) for CIS~122: Algorithms and Programming
+        \begin{innerlist}
+            \item Fall~2008
+            \item Responsible for 1~hour lab section where undergraduate
+                students design programs implementing different algorithms
+            \item Grade assignments of 60 students
+        \end{innerlist}~
+    \end{innerlist}
+\end{outerlist}
+
+
+\href{http://www.utah.edu}{\textbf{University of Utah}},
+Salt Lake City, Utah USA
+\begin{outerlist}
+    \item[] \textit{Undergraduate Student}%
+        \hfill \textbf{Fall 2000 to Spring 2003}
+\end{outerlist}
+
+\section{Education}
+%
+\href{http://www.uoregon.edu/}{\textbf{University of Oregon}},
+Eugene, Oregon USA
+\begin{outerlist}
+
+\item[] M.S.,
+        \href{http://www.cs.uoregon.edu/}
+             {Computer and Information Science}, June 2009
+        \begin{innerlist}
+        \item Final Project: \emph{Heterogeneous Data Generation}
+        \item Adviser:
+              \href{http://www.cs.uoregon.edu/~dou/}
+                   {Assistant Professor Dejing Dou}
+        \item Area of Study: Artificial Intelligence/Data Mining
+        \end{innerlist}
+\end{outerlist}
+
+\blankline
+
+\href{http://www.utah.edu/}{\textbf{University of Utah}},
+Salt Lake City, Utah USA
+\begin{outerlist}
+
+\item[] B.S.,
+        \href{http://www.cs.utah.edu/}
+             {Computer Science}, May 2003
+        \begin{innerlist}
+        \item Deans List, 2003
+        \end{innerlist}
+\end{outerlist}
+
+\section{Service}
+%
+\href{http://sorensonunitycenter.com/computer.htm}
+     {\textbf{Sorenson Multi-Cultural Center Youth Computer Clubhouse}},
+Salt Lake City, Utah USA
+\begin{outerlist}
+    \item[] \textit{Computer Coach}%
+            \hfill \textbf{Spring 2003}
+        \begin{innerlist}
+            \item Assist youth with basic computer and internet usage
+            \item Help youth with exciting and creative computer projects, including graphic design and website design
+            \item Role model for at-risk youth
+        \end{innerlist}
+\end{outerlist}
+
+\blankline
+
+\href{http://www.plannedparenthood.org/ppsworegon/}
+    {\textbf{Planned Parenthood of Southwestern Oregon (PPSO)}},
+Eugene, Oregon USA
+\begin{outerlist}
+    \item[] \textit{Volunteer}%
+        \hfill \textbf{2007 to 2009}
+        \begin{innerlist}
+            \item Table for Planned Parenthood at various events
+            \item Participate in phone banks
+            \item Help as a table guide at annual PPSO Galas
+        \end{innerlist}
+\end{outerlist}
+
+\blankline
+
+\href{http://www.eugeneconcertchoir.org/}
+    {\textbf{Eugene Concert Choir}},
+Eugene, Oregon USA
+\begin{outerlist}
+    \item[] \textit{Volunteer, Tenor 2}%
+        \hfill \textbf{August 2008 to June 2010}
+        \begin{innerlist}
+            \item Help with pre-concert setup
+            \item Sing!
+        \end{innerlist}
+\end{outerlist}
+
+\section{Hobbies}
+%
+Sailing, biking, juggling, unicycling, 3D printing, DDR, piano, guitar,
+accordian, trumpet, swimming, racquetball, volleyball, tennis, kickball,
+snow sports, water sports, etc. Life is fun, I really love just about
+everything I do.
+
+\section{References}
+%
+Available upon request
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% End CV Document %%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -1,5 +1,11 @@
 _site
 .sass-cache
-_deploy.yml
 .deploy
 Gemfile.lock
+
+# Latex stuff
+assets/resume/*.aux
+assets/resume/*.log
+assets/resume/*.out
+assets/resume/*.pdf
+assets/resume/*.pdf_tex

@@ -1,0 +1,13 @@
+language: ruby
+rvm:
+  - 2.2.0
+install:
+  - bundle
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq texlive-full
+before_script:
+  - cd assets/resume && pdflatex -shell-escape bradpitcher_resume.tex
+  # This needs to be run a second time to get the page number footer right
+  - cd assets/resume && pdflatex -shell-escape bradpitcher_resume.tex
+script:
+  - octopress deploy
