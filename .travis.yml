@@ -11,6 +11,7 @@ dist: trusty
 before_install:
   - openssl aes-256-cbc -K $encrypted_998bb8df25c8_key -iv $encrypted_998bb8df25c8_iv
     -in id_rsa.enc -out ~/.ssh/id_rsa -d
+  - chmod go-rw ~/.ssh/id_rsa
 install:
   - bundle
 before_script:
