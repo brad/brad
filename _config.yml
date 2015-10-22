@@ -11,10 +11,6 @@ github_username:  brad
 # Build settings
 markdown: kramdown
 highlighter: pygments
-exclude:
-  - "*.out"
-  - "*.log"
-  - "*.aux"
 
 # Default extension for new posts and pages
 post_ext: markdown
