@@ -14,9 +14,6 @@ before_install:
   - chmod go-rw ~/.ssh/id_rsa
 install:
   - bundle
-before_script:
-  - (cd assets/resume && pdflatex -shell-escape bradpitcher_resume.tex)
-  - (cd assets/resume && pdflatex -shell-escape bradpitcher_resume.tex)
 script:
   - jekyll build
   - octopress deploy
