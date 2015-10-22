@@ -16,4 +16,5 @@ install:
   - bundle
 script:
   - jekyll build
+  - jekyll build
   - octopress deploy
