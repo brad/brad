@@ -77,3 +77,4 @@ PLATFORMS
 
 DEPENDENCIES
   octopress (~> 3.0)
+  octopress-hooks (~> 2.6)
