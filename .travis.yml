@@ -14,6 +14,7 @@ before_install:
   - chmod go-rw ~/.ssh/id_rsa
 install:
   - bundle
+  - gem install pygments
 script:
   - jekyll build
   - jekyll build
