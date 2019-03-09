@@ -1,6 +1,7 @@
 _site
 .sass-cache
 .deploy
+deploy_key
 
 # Latex stuff
 assets/resume/*.aux
