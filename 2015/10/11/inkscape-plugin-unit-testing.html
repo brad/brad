@@ -85,12 +85,12 @@ plugin export by instantiating the plugins effect class and calling the
 My plugin stores the results in a member variable, so I could compare that
 against known good output. Something like this:</p>
 
-<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">openscad_dxf</span> <span class="kn">import</span> <span class="n">OpenSCADDXFEffect</span>
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span></span><span class="kn">from</span> <span class="nn">openscad_dxf</span> <span class="kn">import</span> <span class="n">OpenSCADDXFEffect</span>
 
 <span class="n">effect</span> <span class="o">=</span> <span class="n">OpenSCADDXFEffect</span><span class="p">()</span>
-<span class="n">effect</span><span class="o">.</span><span class="n">affect</span><span class="p">([</span><span class="s">&#39;tests/files/circle.svg&#39;</span><span class="p">])</span>
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;tests/files/circle.dxf&#39;</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">dxf_file</span><span class="p">:</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">effect</span><span class="o">.</span><span class="n">dxf</span><span class="p">,</span> <span class="n">dxf_file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">rstrip</span><span class="p">())</span></code></pre></div>
+<span class="n">effect</span><span class="o">.</span><span class="n">affect</span><span class="p">([</span><span class="s1">&#39;tests/files/circle.svg&#39;</span><span class="p">])</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;tests/files/circle.dxf&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">dxf_file</span><span class="p">:</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">effect</span><span class="o">.</span><span class="n">dxf</span><span class="p">,</span> <span class="n">dxf_file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">rstrip</span><span class="p">())</span></code></pre></figure>
 
 <h2 id="testing-multiple-inkscape-versions">Testing multiple Inkscape versions</h2>
 
@@ -102,23 +102,23 @@ specify a test matrix of multiple Python versions and multiple Inkscape versions
 and the service now runs my unit tests with all combinations of the specified
 Python and Inkscape versions. Here’s the configuration I started with:</p>
 
-<div class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="l-Scalar-Plain">language</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">python</span>
-<span class="l-Scalar-Plain">python</span><span class="p-Indicator">:</span>
-  <span class="p-Indicator">-</span> <span class="s">&quot;pypy&quot;</span>
-  <span class="p-Indicator">-</span> <span class="s">&quot;2.7&quot;</span>
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span></span><span class="l l-Scalar l-Scalar-Plain">language</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">python</span>
+<span class="l l-Scalar l-Scalar-Plain">python</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="s">&quot;pypy&quot;</span>
+  <span class="p p-Indicator">-</span> <span class="s">&quot;2.7&quot;</span>
 <span class="c1"># Test both current major versions of Inkscape</span>
-<span class="l-Scalar-Plain">env</span><span class="p-Indicator">:</span>
-  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">INKSCAPE_VERSION=&quot;0.48.3.1-1ubuntu1.1&quot;</span>
-  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">INKSCAPE_VERSION=&quot;0.91.0+37~ubuntu12.04.1&quot;</span>
+<span class="l l-Scalar l-Scalar-Plain">env</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">INKSCAPE_VERSION=&quot;0.48.3.1-1ubuntu1.1&quot;</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">INKSCAPE_VERSION=&quot;0.91.0+37~ubuntu12.04.1&quot;</span>
 <span class="c1"># command to install dependencies</span>
-<span class="l-Scalar-Plain">install</span><span class="p-Indicator">:</span>
-  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">sudo add-apt-repository -y ppa:inkscape.dev/stable</span>
-  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">sudo apt-get update -qq</span>
-  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">sudo apt-get install -qq &quot;inkscape=$INKSCAPE_VERSION&quot;</span>
-  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">pip install -r test-requirements.txt</span>
+<span class="l l-Scalar l-Scalar-Plain">install</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">sudo add-apt-repository -y ppa:inkscape.dev/stable</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">sudo apt-get update -qq</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">sudo apt-get install -qq &quot;inkscape=$INKSCAPE_VERSION&quot;</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">pip install -r test-requirements.txt</span>
 <span class="c1"># command to run tests</span>
-<span class="l-Scalar-Plain">script</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">nosetests --with-coverage --cover-branches</span>
-<span class="l-Scalar-Plain">after_success</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">coveralls</span></code></pre></div>
+<span class="l l-Scalar l-Scalar-Plain">script</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">nosetests --with-coverage --cover-branches</span>
+<span class="l l-Scalar l-Scalar-Plain">after_success</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">coveralls</span></code></pre></figure>
 
 <p>Allow me to break down the important pieces here. First, we specify the Python
 versions to test against. We only list <code>pypy</code>, and <code>2.7</code> here because there is
@@ -157,10 +157,10 @@ environments. There is a handy service called
 a virtual display on which to show any GUI processes. We can start the service
 on a Travis server with just a few extra lines of configuration:</p>
 
-<div class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="c1"># Start xvfb so we can run Inkscape headless</span>
-<span class="l-Scalar-Plain">before_install</span><span class="p-Indicator">:</span>
-  <span class="p-Indicator">-</span> <span class="s">&quot;export</span><span class="nv"> </span><span class="s">DISPLAY=:99.0&quot;</span>
-  <span class="p-Indicator">-</span> <span class="s">&quot;sh</span><span class="nv"> </span><span class="s">-e</span><span class="nv"> </span><span class="s">/etc/init.d/xvfb</span><span class="nv"> </span><span class="s">start&quot;</span></code></pre></div>
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span></span><span class="c1"># Start xvfb so we can run Inkscape headless</span>
+<span class="l l-Scalar l-Scalar-Plain">before_install</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="s">&quot;export</span><span class="nv"> </span><span class="s">DISPLAY=:99.0&quot;</span>
+  <span class="p p-Indicator">-</span> <span class="s">&quot;sh</span><span class="nv"> </span><span class="s">-e</span><span class="nv"> </span><span class="s">/etc/init.d/xvfb</span><span class="nv"> </span><span class="s">start&quot;</span></code></pre></figure>
 
 <p>With this configuration in place, all I have to do is push my changes and Travis
 automatically verifies that the expected dxf files get produced in both current
