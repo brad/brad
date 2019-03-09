@@ -1,7 +1,6 @@
 _site
 .sass-cache
 .deploy
-Gemfile.lock
 
 # Latex stuff
 assets/resume/*.aux
